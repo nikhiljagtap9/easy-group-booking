@@ -67,6 +67,7 @@
                   <div data-i18n="Dashboards">Dashboards</div>
                </a>
             </li>
+            @hasrole('Admin')
             <li class="menu-item {{ request()->routeIs('client.*') ? 'open' : '' }}" >
                <a href="javascript:void(0);" class="menu-link menu-toggle {{ request()->routeIs('client.*') ? 'active_land' : '' }} ">
                   <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-user-hexagon">
@@ -90,6 +91,8 @@
                   </li>
                </ul>
             </li>
+            @endhasrole
+            @hasanyrole('Admin|Client')
             <li class="menu-item {{ request()->routeIs('event.*') ? 'open' : '' }}">
                <a href="javascript:void(0);" class="menu-link menu-toggle {{ request()->routeIs('event.*') ? 'active_land' : '' }} ">
                   <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-ticket"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 5l0 2" /><path d="M15 11l0 2" /><path d="M15 17l0 2" /><path d="M5 5h14a2 2 0 0 1 2 2v3a2 2 0 0 0 0 4v3a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-3a2 2 0 0 0 0 -4v-3a2 2 0 0 1 2 -2" /></svg>
@@ -165,9 +168,26 @@
                <a href="{{ route('booking.view') }}" class="menu-link {{ request()->routeIs('booking.*') ? 'active_land' : '' }}">
                   <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="currentColor"  class="icon icon-tabler icons-tabler-filled icon-tabler-calendar-event"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M16 2a1 1 0 0 1 .993 .883l.007 .117v1h1a3 3 0 0 1 2.995 2.824l.005 .176v12a3 3 0 0 1 -2.824 2.995l-.176 .005h-12a3 3 0 0 1 -2.995 -2.824l-.005 -.176v-12a3 3 0 0 1 2.824 -2.995l.176 -.005h1v-1a1 1 0 0 1 1.993 -.117l.007 .117v1h6v-1a1 1 0 0 1 1 -1m3 7h-14v9.625c0 .705 .386 1.286 .883 1.366l.117 .009h12c.513 0 .936 -.53 .993 -1.215l.007 -.16z" /><path d="M8 14h2v2h-2z" /></svg>
                   <div >Booking</div>
+               </a>  
+            </li>
+            @endhasanyrole
+            @hasrole('Guest')
+            <li class="menu-item">
+               <a href="incomplete_booking.php" class="menu-link active_loctn_2">
+                  <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-calendar-time"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" /><path d="M18 18m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" /><path d="M15 3v4" /><path d="M7 3v4" /><path d="M3 11h16" /><path d="M18 16.496v1.504l1 1" /></svg>
+                  <div >Incomplete Booking</div>
                </a>
                 
             </li>
+             
+            <li class="menu-item">
+               <a href="completed_booking.php" class="menu-link active_loctn">
+                  <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-calendar-check"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M11.5 21h-5.5a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v6" /><path d="M16 3v4" /><path d="M8 3v4" /><path d="M4 11h16" /><path d="M15 19l2 2l4 -4" /></svg>
+                  <div >Completed Booking</div>
+               </a>
+                
+            </li>
+            @endhasrole
           
 
 
@@ -293,14 +313,38 @@
                         </span>
                         </a>
                      </li>
+                     
                      <li>
                         <div class="d-grid px-2 pt-2 pb-1">
-                           <a class="btn btn-sm btn-danger d-flex" href="{{ url('/logout') }}">
-                           <small class="align-middle">Logout</small>
-                           <i class="ti ti-logout ms-2 ti-14px"></i>
-                           </a>
+                           @if(auth()->check() && (auth()->user()->hasRole('Admin') || auth()->user()->hasRole('Client')))
+                                 <a class="btn btn-sm btn-danger d-flex" href="{{ url('/logout') }}">
+                                    <small class="align-middle">Logout</small>
+                                    <i class="ti ti-logout ms-2 ti-14px"></i>
+                                 </a>
+                           @elseif(auth()->check() && auth()->user()->hasRole('Guest'))
+                                 <a class="btn btn-sm btn-danger d-flex" href="{{ url('/guest/logout') }}">
+                                    <small class="align-middle">Logout</small>
+                                    <i class="ti ti-logout ms-2 ti-14px"></i>
+                                 </a>
+                           @endif
+
+                           {{-- 
+                                 Or you can use Blade's @hasrole directive:
+                                 @hasrole('Admin')
+                                    <a class="btn btn-sm btn-danger d-flex" href="{{ url('/logout') }}">
+                                       <small class="align-middle">Logout</small>
+                                       <i class="ti ti-logout ms-2 ti-14px"></i>
+                                    </a>
+                                 @elsehasrole('Guest')
+                                    <a class="btn btn-sm btn-danger d-flex" href="{{ url('/guest/logout') }}">
+                                       <small class="align-middle">Logout</small>
+                                       <i class="ti ti-logout ms-2 ti-14px"></i>
+                                    </a>
+                                 @endhasrole
+                           --}}
                         </div>
                      </li>
+
                   </ul>
                </li>
                <!--/ User -->

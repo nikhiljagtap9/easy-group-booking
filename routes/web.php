@@ -7,6 +7,7 @@ use App\Http\Controllers\ClientController;
 use App\Http\Controllers\HotelController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\GuestController;
 
 Route::get('/', function () {
    // return view('welcome');
@@ -38,7 +39,6 @@ Route::get('/client/add', [ClientController::class, 'create'])->name('client.add
     return view('client.list'); // You can return a view directly
 })->name('client.list'); */
 Route::get('/client/list', [ClientController::class, 'index'])->name('client.list');
-
 Route::post('/client/store', [ClientController::class, 'store'])->name('client.store');
 
 Route::prefix('event')->group(function () {
@@ -70,6 +70,20 @@ Route::prefix('hotel')->group(function () {
 
 Route::post('/hotel/store-ajax', [HotelController::class, 'storeAjax'])->name('hotel.store.ajax');
 Route::post('/group/store-ajax', [GroupController::class, 'storeAjax'])->name('group.store.ajax');
+
+Route::prefix('guest')->group(function () {
+    Route::get('/register', [GuestController::class, 'showRegisterForm'])->name('guest.register');
+    Route::post('/register', [GuestController::class, 'register'])->name('guest.register.submit');
+    Route::get('/login', [GuestController::class, 'showLoginForm'])->name('guest.login');
+    Route::post('/login', [GuestController::class, 'login'])->name('guest.login.submit');
+    Route::get('/logout', [GuestController::class, 'logout'])->name('guest.logout');
+    Route::get('/form',[GuestController::class,'showForm'])->name('guest.form');
+
+    Route::post('/store-step1', [GuestController::class, 'storeStep1'])->name('guest.storeStep1');
+    Route::post('/store-step2', [GuestController::class, 'storeStep2'])->name('guest.storeStep2');
+
+});
+
 
 
 Route::get('/booking/view', function () {
